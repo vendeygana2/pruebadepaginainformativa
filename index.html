@@ -109,6 +109,21 @@
             border: none;
         }
 
+        .modal-secondary .construction-container {
+            text-align: center;
+        }
+
+        .modal-secondary .construction-container img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .modal-secondary .construction-container p {
+            margin-top: 20px;
+            font-size: 1.5em;
+            color: #ED7318;
+        }
+
         @media (min-width: 1024px) {
             .modal {
                 width: 520px; /* Tamaño reducido para PC */
@@ -127,8 +142,16 @@
             document.getElementById('modal-secondary').style.display = 'flex';
         }
 
+        function openConstructionModal() {
+            document.getElementById('modal-construction').style.display = 'flex';
+        }
+
         function closeSecondaryModal() {
             document.getElementById('modal-secondary').style.display = 'none';
+        }
+
+        function closeConstructionModal() {
+            document.getElementById('modal-construction').style.display = 'none';
         }
 
         function closeMainModal() {
@@ -144,14 +167,24 @@
             <button onclick="openSecondaryModal('https://www.plough.com/es/suscribir/oracion-diaria')">ORACIÓN DEL DÍA</button>
             <button onclick="openSecondaryModal('https://monitordolarvenezuela.com/')">COTIZACIÓN DEL DÓLAR HOY</button>
             <button onclick="openSecondaryModal('https://www.clarin.com/horoscopo?srsltid=AfmBOoqEn8TE5TwruUNV8fk2KAJqQV-ypS_qVSYUJWVbrjigS54HTCwl')">Horóscopo de HOY</button>
-            <button>Botón 4</button>
+            <button onclick="openConstructionModal()">NOVEDADES VENDE Y GANA</button>
         </div>
     </div>
 
     <div class="modal-secondary" id="modal-secondary">
+        <!-- Botón de cierre para la ventana secundaria -->
         <button onclick="closeSecondaryModal()" style="position: absolute; top: 10px; right: 10px; background-color: red; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Cerrar</button>
         <div class="image-container">
             <iframe id="modal-iframe" src="" title="Contenido"></iframe>
+        </div>
+    </div>
+
+    <div class="modal-secondary" id="modal-construction">
+        <!-- Botón de cierre para la ventana de construcción -->
+        <button onclick="closeConstructionModal()" style="position: absolute; top: 10px; right: 10px; background-color: red; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Cerrar</button>
+        <div class="construction-container">
+            <img src="https://i.pinimg.com/originals/7e/8a/28/7e8a28e706e4cfef1155d5ffd882efb9.gif" alt="Hombre Trabajando">
+            <p>PÁGINA EN CONSTRUCCIÓN</p>
         </div>
     </div>
 </body>
