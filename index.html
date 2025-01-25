@@ -18,18 +18,20 @@
 
         .modal {
             background-color: white;
-            width: 90%;
-            max-width: 800px;
-            height: 90%;
-            max-height: 800px;
+            width: 90%; /* Ajuste para móviles */
+            height: 90%; /* Ajuste para móviles */
+            max-width: 520px; /* Tamaño máximo para PC */
+            max-height: 520px; /* Tamaño máximo para PC */
             padding: 20px;
+            border: 5px solid #ED7318; /* Marco de color naranja */
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             text-align: center;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
 
         .modal h1 {
@@ -37,55 +39,119 @@
             font-size: 1.5em;
         }
 
-        .image-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            align-items: center;
-            width: 100%;
-            height: 100%;
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 1em;
         }
 
-        .image-container div {
-            width: 45%;
-            height: 45%;
-            background-color: #f0f0f0;
+        .button-container {
             display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 4px;
+            background-color: #ED7318;
+            color: white;
+            cursor: pointer;
+        }
+
+        .button-container button:hover {
+            background-color: #d65f15;
+        }
+
+        .modal-secondary {
+            background-color: white;
+            width: 90%; /* Ajuste para móviles */
+            height: 90%; /* Ajuste para móviles */
+            max-width: 600px; /* Tamaño máximo para PC */
+            max-height: 600px; /* Tamaño máximo para PC */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 10px;
-            flex-direction: column;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            display: none;
         }
 
-        .image-container iframe {
+        .modal-secondary .image-container {
+            width: 100%;
+            height: 100%;
+            background-color: #f0f0f0;
+            border: 5px solid #ED7318;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .modal-secondary .image-container iframe {
             width: 100%;
             height: 100%;
             border: none;
         }
 
-        .image-container .caption {
-            font-weight: bold;
-            margin-bottom: 5px;
-            font-size: 0.9em;
+        @media (min-width: 1024px) {
+            .modal {
+                width: 520px; /* Tamaño reducido para PC */
+                height: 520px; /* Tamaño reducido para PC */
+            }
+
+            .modal-secondary {
+                width: 600px; /* Tamaño máximo para PC */
+                height: 600px; /* Tamaño máximo para PC */
+            }
         }
     </style>
+    <script>
+        function openSecondaryModal(url) {
+            document.getElementById('modal-iframe').src = url;
+            document.getElementById('modal-secondary').style.display = 'flex';
+        }
+
+        function closeSecondaryModal() {
+            document.getElementById('modal-secondary').style.display = 'none';
+        }
+
+        function closeMainModal() {
+            window.location.href = 'https://www.vendeygana.net/user/';
+        }
+    </script>
 </head>
 <body>
     <div class="modal">
         <h1>VENDE Y GANA AL DIA</h1>
+        <button class="close-btn" onclick="closeMainModal()">X</button>
+        <div class="button-container">
+            <button onclick="openSecondaryModal('https://monitordolarvenezuela.com/')">COTIZACIÓN DEL DÓLAR HOY</button>
+            <button onclick="openSecondaryModal('https://www.lanacion.com.ar/horoscopo/')">Horóscopo de HOY</button>
+            <button>Botón 3</button>
+            <button>Botón 4</button>
+        </div>
+    </div>
+
+    <div class="modal-secondary" id="modal-secondary">
+        <button onclick="closeSecondaryModal()" style="position: absolute; top: 10px; right: 10px; background-color: red; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Cerrar</button>
         <div class="image-container">
-            <div>
-                <div class="caption">COTIZACIÓN DEL DÓLAR</div>
-                <iframe src="https://monitordolarvenezuela.com/" title="Monitor Dólar Venezuela"></iframe>
-            </div>
-            <div>
-                <div class="caption">HORÓSCOPO DIARIO</div>
-                <iframe src="https://www.lanacion.com.ar/horoscopo/" title="Horóscopo La Nación"></iframe>
-            </div>
-            <!-- Añadir aquí las otras dos imágenes dinámicas -->
+            <iframe id="modal-iframe" src="" title="Contenido"></iframe>
         </div>
     </div>
 </body>
