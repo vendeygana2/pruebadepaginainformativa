@@ -34,6 +34,17 @@
             position: relative;
         }
 
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header img {
+            max-height: 60px; /* Ajusta la altura según sea necesario */
+            margin-right: 10px;
+        }
+
         .modal h1 {
             margin-bottom: 20px;
             font-size: 1.5em;
@@ -124,6 +135,14 @@
             color: #ED7318;
         }
 
+        .saludo {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            text-align: center;
+            color: black; /* Color del texto negro */
+            text-transform: lowercase; /* Todo en minúsculas */
+        }
+
         @media (min-width: 1024px) {
             .modal {
                 width: 520px; /* Tamaño reducido para PC */
@@ -137,6 +156,34 @@
         }
     </style>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const saludoElement = document.getElementById('saludo');
+            const now = new Date();
+            const hours = now.getHours();
+            const dayIndex = now.getDay();
+            const days = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+
+            let saludo = '';
+            if (hours < 12) {
+                saludo = 'buenos días';
+            } else if (hours < 18) {
+                saludo = 'buenas tardes';
+            } else {
+                saludo = 'buenas noches';
+            }
+
+            let diaSemana = '';
+            if (dayIndex === 1) {
+                diaSemana = `feliz y bendecido inicio de semana para ti y los tuyos te deseamos desde vende y gana éxito en tus ventas. feliz ${days[dayIndex]}`;
+            } else if ([5, 6, 0].includes(dayIndex)) {
+                diaSemana = `bendecido fin de semana para ti y los tuyos te deseamos desde vende y gana. feliz ${days[dayIndex]}`;
+            } else {
+                diaSemana = `feliz ${days[dayIndex]}`;
+            }
+
+            saludoElement.textContent = `${saludo}, ${diaSemana}`;
+        });
+
         function openSecondaryModal(url) {
             document.getElementById('modal-iframe').src = url;
             document.getElementById('modal-secondary').style.display = 'flex';
@@ -161,19 +208,24 @@
 </head>
 <body>
     <div class="modal">
-        <h1>VENDE Y GANA AL DIA</h1>
+        <div class="header">
+            <img src="https://www.vendeygana.net/assets/img/logo-1.png" alt="Logo">
+            <img src="https://i.pinimg.com/originals/6f/e6/df/6fe6dfc4bccb3b78e41f3534451af26e.gif" alt="GIF Animado">
+        </div>
+        <div class="saludo" id="saludo"></div>
+        <h1>vende y gana al día</h1>
         <button class="close-btn" onclick="closeMainModal()">X</button>
         <div class="button-container">
-            <button onclick="openSecondaryModal('https://www.plough.com/es/suscribir/oracion-diaria')">ORACIÓN DEL DÍA</button>
-            <button onclick="openSecondaryModal('https://monitordolarvenezuela.com/')">COTIZACIÓN DEL DÓLAR HOY</button>
-            <button onclick="openSecondaryModal('https://www.clarin.com/horoscopo?srsltid=AfmBOoqEn8TE5TwruUNV8fk2KAJqQV-ypS_qVSYUJWVbrjigS54HTCwl')">Horóscopo de HOY</button>
-            <button onclick="openConstructionModal()">NOVEDADES VENDE Y GANA</button>
+            <button onclick="openSecondaryModal('https://www.plough.com/es/suscribir/oracion-diaria')">oración del día</button>
+            <button onclick="openSecondaryModal('https://monitordolarvenezuela.com/')">cotización del dólar hoy</button>
+            <button onclick="openSecondaryModal('https://www.clarin.com/horoscopo?srsltid=AfmBOoqEn8TE5TwruUNV8fk2KAJqQV-ypS_qVSYUJWVbrjigS54HTCwl')">horóscopo de hoy</button>
+            <button onclick="openConstructionModal()">novedades vende y gana</button>
         </div>
     </div>
 
     <div class="modal-secondary" id="modal-secondary">
         <!-- Botón de cierre para la ventana secundaria -->
-        <button onclick="closeSecondaryModal()" style="position: absolute; top: 10px; right: 10px; background-color: red; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Cerrar</button>
+        <button onclick="closeSecondaryModal()" style="position: absolute; top: 10px; right: 10px; background-color: red; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">cerrar</button>
         <div class="image-container">
             <iframe id="modal-iframe" src="" title="Contenido"></iframe>
         </div>
@@ -181,10 +233,10 @@
 
     <div class="modal-secondary" id="modal-construction">
         <!-- Botón de cierre para la ventana de construcción -->
-        <button onclick="closeConstructionModal()" style="position: absolute; top: 10px; right: 10px; background-color: red; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Cerrar</button>
+        <button onclick="closeConstructionModal()" style="position: absolute; top: 10px; right: 10px; background-color: red; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">cerrar</button>
         <div class="construction-container">
             <img src="https://i.pinimg.com/originals/7e/8a/28/7e8a28e706e4cfef1155d5ffd882efb9.gif" alt="Hombre Trabajando">
-            <p>PÁGINA EN CONSTRUCCIÓN</p>
+            <p>página en construcción</p>
         </div>
     </div>
 </body>
