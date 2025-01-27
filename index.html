@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pantalla Emergente</title>
+    <!-- Incluir Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Mailandy:wght@700&display=swap" rel="stylesheet">
     <style>
         body, html {
             margin: 0;
@@ -83,6 +85,19 @@
             background-color: #d65f15;
         }
 
+        .likes {
+            margin-top: 20px;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .likes .heart-icon {
+            color: red;
+            font-size: 1.5em;
+        }
+
         .modal-secondary {
             background-color: white;
             width: 90%; /* Ajuste para móviles */
@@ -143,6 +158,57 @@
             text-transform: lowercase; /* Todo en minúsculas */
         }
 
+        .saludo .bold-uppercase {
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .highlight-uppercase {
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #ED7318; /* Color de resaltado */
+        }
+
+        .motivational-phrase {
+            font-size: 1em;
+            margin-top: 10px;
+            color: #333;
+            font-family: 'Mailandy', sans-serif; /* Aplicar la fuente Mailandy */
+            font-weight: bold; /* Aplicar negrita */
+        }
+
+        .thank-you-modal {
+            background-color: white;
+            width: 80%; /* Ajuste para móviles */
+            max-width: 400px; /* Tamaño máximo para PC */
+            padding: 20px;
+            border: 5px solid #ED7318; /* Marco de color naranja */
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 20;
+            font-family: 'Mailandy', sans-serif; /* Aplicar la fuente Mailandy */
+            font-weight: bold; /* Aplicar negrita */
+        }
+
+        .thank-you-modal .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
         @media (min-width: 1024px) {
             .modal {
                 width: 520px; /* Tamaño reducido para PC */
@@ -158,31 +224,90 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const saludoElement = document.getElementById('saludo');
+            const likesElement = document.getElementById('likes');
+            const motivationalPhraseElement = document.createElement('div');
+            motivationalPhraseElement.className = 'motivational-phrase';
+            saludoElement.parentNode.insertBefore(motivationalPhraseElement, saludoElement.nextSibling);
+
             const now = new Date();
             const hours = now.getHours();
             const dayIndex = now.getDay();
             const days = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+            const motivationalPhrases = [
+                "¡Aprovecha cada momento para ser feliz!",
+                "¡Hoy es un buen día para empezar algo nuevo!",
+                "¡Nunca es tarde para alcanzar tus sueños!",
+                "¡Cree en ti mismo y todo será posible!",
+                "¡La perseverancia es la clave del éxito!",
+                "¡Disfruta de cada pequeña victoria!",
+                "¡Hoy es un día perfecto para ser feliz!"
+            ];
 
             let saludo = '';
             if (hours < 12) {
-                saludo = 'buenos días';
+                saludo = '<span class="bold-uppercase">BUENOS DÍAS</span>';
             } else if (hours < 18) {
-                saludo = 'buenas tardes';
+                saludo = '<span class="bold-uppercase">BUENAS TARDES</span>';
             } else {
-                saludo = 'buenas noches';
+                saludo = '<span class="bold-uppercase">BUENAS NOCHES</span>';
             }
 
             let diaSemana = '';
             if (dayIndex === 1) {
-                diaSemana = `feliz y bendecido inicio de semana para ti y los tuyos te deseamos desde vende y gana éxito en tus ventas. feliz ${days[dayIndex]}`;
+                diaSemana = `feliz y bendecido inicio de semana para ti y los tuyos te deseamos desde vende y gana éxito en tus ventas. <span class="highlight-uppercase">FELIZ ${days[dayIndex].toUpperCase()}</span>`;
             } else if ([5, 6, 0].includes(dayIndex)) {
-                diaSemana = `bendecido fin de semana para ti y los tuyos te deseamos desde vende y gana. feliz ${days[dayIndex]}`;
+                diaSemana = `bendecido fin de semana para ti y los tuyos te deseamos desde vende y gana. <span class="highlight-uppercase">FELIZ ${days[dayIndex].toUpperCase()}</span>`;
             } else {
-                diaSemana = `feliz ${days[dayIndex]}`;
+                diaSemana = `<span class="highlight-uppercase">FELIZ ${days[dayIndex].toUpperCase()}</span>`;
             }
 
-            saludoElement.textContent = `${saludo}, ${diaSemana}`;
+            saludoElement.innerHTML = `${saludo}, ${diaSemana}`;
+            motivationalPhraseElement.textContent = motivationalPhrases[dayIndex];
+
+            // Incrementar el contador de likes al cargar la página
+            incrementLikes();
+
+            // Actualizar el contador de likes en la interfaz
+            updateLikesDisplay(likesElement);
         });
+
+        function incrementLikes() {
+            let likes = localStorage.getItem('likes') ? parseInt(localStorage.getItem('likes'), 10) : 85;
+            likes++;
+            localStorage.setItem('likes', likes);
+        }
+
+        function updateLikesDisplay(element) {
+            let likes = localStorage.getItem('likes') ? parseInt(localStorage.getItem('likes'), 10) : 85;
+            element.innerHTML = `<span class="heart-icon">❤️</span> Likes de los usuarios: ${likes}`;
+        }
+
+        function likeButtonClicked() {
+            const lastLikedDate = localStorage.getItem('lastLikedDate');
+            const today = new Date().toISOString().split('T')[0]; // Obtener la fecha en formato YYYY-MM-DD
+
+            if (lastLikedDate === today) {
+                alert('Solo puedes dar "me gusta" una vez al día.');
+                return;
+            }
+
+            localStorage.setItem('lastLikedDate', today);
+            incrementLikes();
+            updateLikesDisplay(document.getElementById('likes'));
+
+            // Mostrar ventana emergente de agradecimiento
+            showThankYouModal();
+        }
+
+        function showThankYouModal() {
+            const thankYouModal = document.getElementById('thank-you-modal');
+            thankYouModal.style.display = 'block';
+        }
+
+        function closeThankYouModal() {
+            const thankYouModal = document.getElementById('thank-you-modal');
+            thankYouModal.style.display = 'none';
+        }
 
         function openSecondaryModal(url) {
             document.getElementById('modal-iframe').src = url;
@@ -221,6 +346,13 @@
             <button onclick="openSecondaryModal('https://www.clarin.com/horoscopo?srsltid=AfmBOoqEn8TE5TwruUNV8fk2KAJqQV-ypS_qVSYUJWVbrjigS54HTCwl')">horóscopo de hoy</button>
             <button onclick="openConstructionModal()">novedades vende y gana</button>
         </div>
+        <div class="likes" id="likes"><span class="heart-icon">❤️</span> Likes de los usuarios: 85</div>
+        <button onclick="likeButtonClicked()" class="like-btn">Darle me gusta</button>
+    </div>
+
+    <div class="thank-you-modal" id="thank-you-modal">
+        <button class="close-btn" onclick="closeThankYouModal()">X</button>
+        <p>¡Gracias por apoyarnos! Eres nuestra inspiración diaria para mejorar.</p>
     </div>
 
     <div class="modal-secondary" id="modal-secondary">
