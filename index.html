@@ -79,10 +79,44 @@
             background-color: #ED7318;
             color: white;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
 
         .button-container button:hover {
             background-color: #d65f15;
+        }
+
+        /* Estilos específicos para el botón de novedades */
+        .novedades-btn {
+            background-color: black !important;
+            color: white !important;
+            animation: parpadeo 2s infinite;
+        }
+
+        .novedades-btn::after {
+            content: "NUEVA NOTICIA";
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: red;
+            color: white;
+            font-size: 0.7em;
+            padding: 2px 5px;
+            border-radius: 10px;
+            animation: parpadeoTexto 1s infinite;
+        }
+
+        @keyframes parpadeo {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes parpadeoTexto {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
 
         .likes {
@@ -133,6 +167,42 @@
             width: 100%;
             height: 100%;
             border: none;
+        }
+
+        .modal-secondary .video-container {
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* Relación de aspecto 16:9 */
+            position: relative;
+            overflow: hidden;
+            border: 5px solid #ED7318;
+            border-radius: 4px;
+        }
+
+        .modal-secondary .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #ED7318;
+            margin-bottom: 15px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .video-description {
+            font-size: 1em;
+            margin-top: 15px;
+            color: #333;
+            text-align: center;
+            line-height: 1.4;
         }
 
         .modal-secondary .construction-container {
@@ -209,6 +279,55 @@
             font-size: 1em;
         }
 
+        .welcome-modal {
+            background-color: white;
+            width: 90%; /* Ajuste para móviles */
+            max-width: 500px; /* Tamaño máximo para PC */
+            padding: 20px;
+            border: 5px solid #ED7318;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 30;
+        }
+
+        .welcome-modal h2 {
+            color: #ED7318;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .welcome-modal p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .welcome-modal .highlight {
+            color: #ED7318;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .welcome-modal button {
+            background-color: #ED7318;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .welcome-modal button:hover {
+            background-color: #d65f15;
+        }
+
         @media (min-width: 1024px) {
             .modal {
                 width: 520px; /* Tamaño reducido para PC */
@@ -223,6 +342,9 @@
     </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Mostrar ventana de bienvenida al cargar la página
+            showWelcomeModal();
+
             const saludoElement = document.getElementById('saludo');
             const likesElement = document.getElementById('likes');
             const motivationalPhraseElement = document.createElement('div');
@@ -264,17 +386,50 @@
             saludoElement.innerHTML = `${saludo}, ${diaSemana}`;
             motivationalPhraseElement.textContent = motivationalPhrases[dayIndex];
 
+            // Añadir clase especial al botón de novedades
+            const novedadesBtn = document.querySelector('.button-container button:nth-child(4)');
+            novedadesBtn.classList.add('novedades-btn');
+
             // Incrementar el contador de likes al cargar la página
-            incrementLikes();
+            incrementDailyLikes();
 
             // Actualizar el contador de likes en la interfaz
             updateLikesDisplay(likesElement);
         });
 
-        function incrementLikes() {
-            let likes = localStorage.getItem('likes') ? parseInt(localStorage.getItem('likes'), 10) : 85;
-            likes++;
-            localStorage.setItem('likes', likes);
+        function showWelcomeModal() {
+            const welcomeModal = document.createElement('div');
+            welcomeModal.className = 'welcome-modal';
+            welcomeModal.innerHTML = `
+                <h2>¡LO TRAEMOS PARA TI!</h2>
+                <p>Conviértete en nuestro <span class="highlight">distribuidor asociado</span> y gana dinero afiliando personas y con las ventas que estas realicen.</p>
+                <p>✨ Gana el <span class="highlight">2%</span> en recargas de saldo<br>
+                ✨ <span class="highlight">8%</span> en recargas de juegos<br>
+                ✨ Entre <span class="highlight">10% y 20%</span> en cuentas streaming</p>
+                <p>Dale al botón <span class="highlight">"NOVEDADES VENDE Y GANA"</span> para más información</p>
+                <button onclick="closeWelcomeModal()">ENTENDIDO</button>
+            `;
+            document.body.appendChild(welcomeModal);
+        }
+
+        function closeWelcomeModal() {
+            const welcomeModal = document.querySelector('.welcome-modal');
+            if (welcomeModal) {
+                welcomeModal.remove();
+            }
+        }
+
+        function incrementDailyLikes() {
+            const lastIncrementDate = localStorage.getItem('lastIncrementDate');
+            const today = new Date().toISOString().split('T')[0]; // Obtener la fecha en formato YYYY-MM-DD
+            
+            // Si no es el mismo día, incrementamos 27 likes
+            if (lastIncrementDate !== today) {
+                let likes = localStorage.getItem('likes') ? parseInt(localStorage.getItem('likes'), 10) : 85;
+                likes += 27; // Sumamos 27 likes diarios
+                localStorage.setItem('likes', likes);
+                localStorage.setItem('lastIncrementDate', today);
+            }
         }
 
         function updateLikesDisplay(element) {
@@ -292,7 +447,12 @@
             }
 
             localStorage.setItem('lastLikedDate', today);
-            incrementLikes();
+            
+            // Incrementar solo 1 like cuando el usuario hace clic
+            let likes = localStorage.getItem('likes') ? parseInt(localStorage.getItem('likes'), 10) : 85;
+            likes++;
+            localStorage.setItem('likes', likes);
+            
             updateLikesDisplay(document.getElementById('likes'));
 
             // Mostrar ventana emergente de agradecimiento
@@ -314,16 +474,20 @@
             document.getElementById('modal-secondary').style.display = 'flex';
         }
 
-        function openConstructionModal() {
-            document.getElementById('modal-construction').style.display = 'flex';
+        function openVideoModal() {
+            const videoUrl = "https://www.youtube.com/embed/X2UA8uSl_Pw?si=YENQUr611CCyA8DS";
+            document.getElementById('video-iframe').src = videoUrl;
+            document.getElementById('modal-video').style.display = 'flex';
         }
 
         function closeSecondaryModal() {
             document.getElementById('modal-secondary').style.display = 'none';
+            document.getElementById('modal-iframe').src = '';
         }
 
-        function closeConstructionModal() {
-            document.getElementById('modal-construction').style.display = 'none';
+        function closeVideoModal() {
+            document.getElementById('modal-video').style.display = 'none';
+            document.getElementById('video-iframe').src = '';
         }
 
         function closeMainModal() {
@@ -344,7 +508,7 @@
             <button onclick="openSecondaryModal('https://www.plough.com/es/suscribir/oracion-diaria')">oración del día</button>
             <button onclick="openSecondaryModal('https://monitordolarvenezuela.com/')">cotización del dólar hoy</button>
             <button onclick="openSecondaryModal('https://www.clarin.com/horoscopo?srsltid=AfmBOoqEn8TE5TwruUNV8fk2KAJqQV-ypS_qVSYUJWVbrjigS54HTCwl')">horóscopo de hoy</button>
-            <button onclick="openConstructionModal()">novedades vende y gana</button>
+            <button onclick="openVideoModal()">novedades vende y gana</button>
         </div>
         <div class="likes" id="likes"><span class="heart-icon">❤️</span> Likes de los usuarios: 85</div>
         <button onclick="likeButtonClicked()" class="like-btn">Darle me gusta</button>
@@ -360,6 +524,18 @@
         <button onclick="closeSecondaryModal()" style="position: absolute; top: 10px; right: 10px; background-color: red; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">cerrar</button>
         <div class="image-container">
             <iframe id="modal-iframe" src="" title="Contenido"></iframe>
+        </div>
+    </div>
+
+    <div class="modal-secondary" id="modal-video">
+        <!-- Botón de cierre para la ventana de video -->
+        <button onclick="closeVideoModal()" style="position: absolute; top: 10px; right: 10px; background-color: red; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">cerrar</button>
+        <div class="video-title">FORMA PARTE DE NUESTRO EQUIPO DE DISTRIBUIDORES</div>
+        <div class="video-container">
+            <iframe id="video-iframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="video-description">
+            ✨ afilia personas ✨ y gana el 2% de las ventas en recargas de saldo 💰, y el 8% en las ventas de recargas de juegos 🎮. Además, gana entre el 10% al 20% en la venta de cuentas streaming 📺. 🚀
         </div>
     </div>
 
