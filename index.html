@@ -328,6 +328,22 @@
             background-color: #d65f15;
         }
 
+        .solicitud-btn {
+            background-color: #ED7318;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .solicitud-btn:hover {
+            background-color: #d65f15;
+        }
+
         @media (min-width: 1024px) {
             .modal {
                 width: 520px; /* Tamaño reducido para PC */
@@ -493,6 +509,10 @@
         function closeMainModal() {
             window.location.href = 'https://www.vendeygana.net/user/';
         }
+
+        function enviarSolicitud() {
+            window.open('https://online.forms.app/respuestasdereportesdefa/solicituddistribuidor', '_blank');
+        }
     </script>
 </head>
 <body>
@@ -537,6 +557,7 @@
         <div class="video-description">
             ✨ afilia personas ✨ y gana el 2% de las ventas en recargas de saldo 💰, y el 8% en las ventas de recargas de juegos 🎮. Además, gana entre el 10% al 20% en la venta de cuentas streaming 📺. 🚀
         </div>
+        <button class="solicitud-btn" onclick="enviarSolicitud()">ENVIAR SOLICITUD</button>
     </div>
 
     <div class="modal-secondary" id="modal-construction">
